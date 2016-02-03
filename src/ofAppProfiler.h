@@ -31,11 +31,15 @@ class ofAppProfilerNode
 		vector<ofAppProfilerNode*>	m_children;
  
 		unsigned long long			m_time; // milliseconds
-		float			 			m_duration;
+		float			 			m_duration,m_durationMean;
  
 		int							m_level;
 		string						m_str;
 		string						m_tab;
+ 
+		vector<float>				m_durationHistory;
+ 
+		static char					smp_stringBuffer[100];
 
 };
 

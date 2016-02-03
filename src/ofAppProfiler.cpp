@@ -9,19 +9,20 @@
 #include "ofAppProfiler.h"
 
 
-
+char ofAppProfilerNode::smp_stringBuffer[100];
 
 //--------------------------------------------------------------
 ofAppProfilerNode::ofAppProfilerNode(string name, ofAppProfilerNode* pParent,int level)
 {
 	m_name = name;
 	mp_parent = pParent;
-	m_duration = 0.0f;
+	m_duration = m_durationMean = 0.0f;
 	m_level = level;
 	m_str = "";
 	for (int i=0;i<level;i++){
 		m_tab+= " ";
 	}
+
 }
 
 //--------------------------------------------------------------
@@ -46,6 +47,17 @@ void ofAppProfilerNode::begin()
 void ofAppProfilerNode::end()
 {
 	m_duration = float(ofGetElapsedTimeMillis() - m_time);
+
+	// Duration history
+	m_durationHistory.push_back(m_duration);
+	if (m_durationHistory.size()>100)
+		m_durationHistory.erase( m_durationHistory.begin() );
+	int nbDurations = m_durationHistory.size();
+	m_durationMean = 0.0f;
+	for (int i=0;i<nbDurations;i++){
+		m_durationMean+=m_durationHistory[i];
+	}
+	m_durationMean /= (float)nbDurations;
 }
 
 //--------------------------------------------------------------
@@ -74,7 +86,9 @@ void ofAppProfilerNode::add(ofAppProfilerNode* pNode)
 //--------------------------------------------------------------
 const char* ofAppProfilerNode::toString()
 {
-	m_str = m_tab + m_name + (mp_parent ? " ["+ofToString(m_duration)+" ms]\n" : "\n");
+	sprintf(smp_stringBuffer, "%2.1f", m_durationMean);
+
+	m_str = m_tab + m_name + (mp_parent ? " ["+ofToString(smp_stringBuffer)+" ms]\n" : "\n");
 	vector<ofAppProfilerNode*>::iterator it = m_children.begin();
 	for ( ; it != m_children.end(); ++it)
 	{

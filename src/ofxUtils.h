@@ -23,4 +23,12 @@ inline float float_relax(float value,float target,float dt,float T=0.5f)
 	return value;
 }
 
-
+//--------------------------------------------------------------
+class ofxUtils
+{
+	public:
+		static void 	computeNormals			( ofMesh & mesh, bool bNormalize );
+		static float	getPixelsSizeForCm		( float cm, ofVec2f screenDim, ofVec2f screenRes=ofVec2f(1920,1080));
+		static float	getPixelsSizeForMm		( float mm, ofVec2f screenDim, ofVec2f screenRes=ofVec2f(1920,1080));
+		static float 	getPixelsSizeforPt		( float pt, ofVec2f screenDim, ofVec2f screenRes=ofVec2f(1920,1080));
+};
