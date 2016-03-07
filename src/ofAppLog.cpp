@@ -12,6 +12,12 @@
 ofAppLog* ofAppLog::smp_instance = 0;
 
 //--------------------------------------------------------------
+/*ofAppLog::ofAppLog()
+{
+	m_disabled = false;
+}
+*/
+//--------------------------------------------------------------
 void ofAppLog::destroy()
 {
 	delete smp_instance;
@@ -20,6 +26,8 @@ void ofAppLog::destroy()
 //--------------------------------------------------------------
 void ofAppLog::begin(string s)
 {
+	if (m_disabled) return;
+
 	println(s);
 	println("{");
 	m_level++;
@@ -28,6 +36,8 @@ void ofAppLog::begin(string s)
 //--------------------------------------------------------------
 void ofAppLog::end()
 {
+	if (m_disabled) return;
+
 	m_level--;
 	println("}");
 }
@@ -35,12 +45,16 @@ void ofAppLog::end()
 //--------------------------------------------------------------
 void ofAppLog::println(ofLogLevel level, const string & message)
 {
+	if (m_disabled) return;
+
 	ofLog(level) << message;
 }
 
 //--------------------------------------------------------------
 void ofAppLog::println(const string & message)
 {
+	if (m_disabled) return;
+
 	ofLog() << space(m_level) << message;
 }
 
@@ -51,7 +65,10 @@ void ofAppLog::println(const string & message)
 ofAppLog* ofAppLog::getInstance()
 {
 	if(smp_instance==0)
+	{
 		smp_instance = new ofAppLog();
+		smp_instance->m_disabled = false;
+	}
 	return smp_instance;
 }
 
