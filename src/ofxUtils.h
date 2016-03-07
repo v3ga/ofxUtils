@@ -16,12 +16,59 @@ inline float float_min(float x,float y)
 {	if(x<y) return x;
 	return y;
 }
+
 //--------------------------------------------------------------
 inline float float_relax(float value,float target,float dt,float T=0.5f)
 {
 	value += (target-value)*float_min(1.0f, dt/T);
 	return value;
 }
+
+//--------------------------------------------------------------
+// char utilities
+//--------------------------------------------------------------
+static inline bool s_isEOF(char c)
+{	return c==0;
+}
+static inline bool s_isEOL(char c)
+{	return (c=='\n' || c=='\r');
+}
+static inline bool s_isSPC(char c)
+{	return (c==' ' || c=='\t');
+}
+static inline bool s_isComment(char c)
+{	return c=='/';
+}
+static inline bool s_isNumeric(char c)
+{	return (c>='0' && c<='9');
+}
+static inline bool s_isDecimalNumber(char c)
+{	return (c>='0' && c<='9')||(c=='-'||c=='.');
+}
+
+static inline bool s_isNumericExtended(char c)
+{	return s_isNumeric(c) || (c=='-' || c=='+' || c=='.' || c=='e' || c=='E');
+}
+static inline bool s_isAlphaNum(char c)
+{	return ( c=='_' || s_isNumeric(c) || (c>='A'&&c<='Z') || (c>='a'&&c<='z') );
+}
+static inline bool s_isAlpha(char c)
+{	return (c>='A'&&c<='Z') || (c>='a'&&c<='z');
+}
+
+static inline bool s_isASCII(char c)
+{	return (c>=' ');
+}
+static inline bool s_isMeta(char c)
+{
+	return (c=='#');
+}
+static inline bool s_isHex(char c)
+{	return (c>='0' && c<='9') || (c>='A' && c<='F') || (c>='a' && c<='f');
+
+}
+#define s_UTF8_isEOL(codePoint) (codePoint==0xE280A8 || codePoint=='\n')
+
 
 //--------------------------------------------------------------
 class ofxUtils
